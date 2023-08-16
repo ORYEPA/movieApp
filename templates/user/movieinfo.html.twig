@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+        <script src="https://cdn.tailwindcss.com"></script>
+        {% block stylesheets %}
+
+
+
+            <form class=" flex  justify-end bg-gray-900">
+                <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                        </svg>
+                    </div>
+                    <input type="search" id="searchbar" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="..." required>
+                </div>
+            </form>
+
+
+
+
+
+
+
+
+        {% endblock %}
+
+        {% block javascripts %}
+            <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+            <script>
+                var movies=[];
+
+                function getdata(){
+                    const settings = {
+                        async: true,
+                        crossDomain: true,
+                        url: 'https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1',
+                        method: 'GET',
+                        headers: {
+                            accept: 'application/json',
+                            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkMTlmN2Q3MmYzOGQ2ZjIzNDEzZTVjODRjZmNmYTMwNSIsInN1YiI6IjY0ZGJhZGM5Yjc3ZDRiMTE0MjVkZmEwNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.OE2bMBkUtaosNS2qL0Sik6tci6W5dGw3AtQFcpH-Elg'
+                        }
+                    };
+
+                    $.ajax(settings).done(function (response) {
+
+                        movies=response.results;
+                        render(movies)
+
+
+                    });
+                }
+                $('#searchbar').on("keyup",function() {
+                    search();
+
+                });
+                function render(movies){
+                    var movieInf= []
+                    var i;
+                    var k=movies;
+
+                    for (i = 0; i < movies.length; ++i) {
+                        var element = `<tr class="bg-gray-800">
+                             <td class="p-3">
+								<img class="rounded-full h-12 w-12   object-cover" src="https://image.tmdb.org/t/p/w500${k[i].poster_path}" alt="unsplash image">
+                            </td>
+                            <td class="p-3">${k[i].original_title}</td>
+                            <td class="p-3">${k[i].overview}</td>
+                            <td class="p-3">${k[i].release_date}</td>
+                        </tr>`
+                        movieInf.push(element);
+                    }
+                    $('.query').empty().append(movieInf.join(''));
+                }
+
+                function search(){
+                    var moviesearch=[];
+
+
+
+
+
+                    var input;
+                    input = $("#searchbar").val();
+                    if (input.length==0){
+                        render(movies)
+                    }
+                    else{
+                        movies.map(function (movie){
+                            if (movie.original_title==input){
+                                moviesearch.push(movie);
+                                console.log(moviesearch)
+                            }
+
+
+                        })
+                        render(moviesearch)
+
+                    }
+
+
+                }
+
+
+
+
+
+
+
+
+
+                $( document ).ready(function() {
+                    getdata()
+
+
+                });
+
+
+
+            </script>
+
+        {% endblock %}
+    </head>
+    <body>
+        {% block body %}
+            <div class="flex  justify-center min-h-screen bg-gray-900">
+                <div class="col-span-12">
+                    <div class="overflow-auto lg:overflow-visible ">
+                        <table class="table text-gray-400 border-separate space-y-6 text-sm">
+                            <thead class="bg-gray-800 text-gray-500">
+                            <tr>
+                                <th class="p-3 text-left">Poster</th>
+                                <th class="p-3 text-left">Title</th>
+                                <th class="p-3 text-left">Overview</th>
+                                <th class="p-3 text-left">Year</th>
+                            </tr>
+                            </thead>
+                            <tbody class="query" id="myUL">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <style>
+                .table {
+                    border-spacing: 0 15px;
+                }
+
+                i {
+                    font-size: 1rem !important;
+                }
+
+                .table tr {
+                    border-radius: 20px;
+                }
+
+                tr td:nth-child(n+5),
+                tr th:nth-child(n+5) {
+                    border-radius: 0 .625rem .625rem 0;
+                }
+
+                tr td:nth-child(1),
+                tr th:nth-child(1) {
+                    border-radius: .625rem 0 0 .625rem;
+                }
+            </style>
+        {% endblock %}
+    </body>
+</html>
