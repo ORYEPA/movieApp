@@ -2,24 +2,37 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
         <script src="https://cdn.tailwindcss.com"></script>
         {% block stylesheets %}
 
+            <nav class="w-full py-4 bg-blue-800 shadow " >
 
 
-            <form class=" flex  justify-end bg-gray-900">
-                <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                        </svg>
-                    </div>
-                    <input type="search" id="searchbar" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="..." required>
-                </div>
-            </form>
+
+                <ul class="flex items-center justify-between font-bold text-sm text-white uppercase no-underline">
+                    <li><a class="hover:text-gray-200 hover:underline px-4" href="/homepage">Homepage</a></li>
+                    <li> <form class=" flex  justify-center bg-gray-900">
+                            <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                    </svg>
+                                </div>
+                                <input type="search" id="searchbar" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="..." required>
+                            </div>
+                        </form>
+                    </li>
+                    <li><a class="hover:text-gray-200 hover:underline px-4" href="/login">Sign out</a></li>
+
+
+                </ul>
+
+            </nav>
+
+
 
 
 
@@ -39,7 +52,7 @@
                     const settings = {
                         async: true,
                         crossDomain: true,
-                        url: 'https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1',
+                        url: 'https://api.themoviedb.org/3/movie/{{ movieId }}?language=en-US',
                         method: 'GET',
                         headers: {
                             accept: 'application/json',
@@ -48,63 +61,87 @@
                     };
 
                     $.ajax(settings).done(function (response) {
+                        movies=response;
 
-                        movies=response.results;
                         render(movies)
-
-
                     });
                 }
-                $('#searchbar').on("keyup",function() {
-                    search();
 
-                });
+
                 function render(movies){
                     var movieInf= []
-                    var i;
-                    var k=movies;
+                    var impgen=[]
+                    var gen=movies.genres
+                    let generesXPelicula = [];
+                    gen.map(function (idmov){
+                        generesXPelicula.push(idmov.name);
 
-                    for (i = 0; i < movies.length; ++i) {
-                        var element = `<tr class="bg-gray-800">
-                             <td class="p-3">
-								<img class="rounded-full h-12 w-12   object-cover" src="https://image.tmdb.org/t/p/w500${k[i].poster_path}" alt="unsplash image">
-                            </td>
-                            <td class="p-3">${k[i].original_title}</td>
-                            <td class="p-3">${k[i].overview}</td>
-                            <td class="p-3">${k[i].release_date}</td>
-                        </tr>`
-                        movieInf.push(element);
-                    }
+
+                    })
+
+                        var element = `<li class="text-white opacity-75 font-bold leading-tight text-center md:text-left">${generesXPelicula}</li>`
+
+                        impgen.push(element);
+
+                    $('.list-disc').append(impgen.join(''));
+
+
+
+                    var element = `<tr class="bg-gray-800">
+                         <td class="p-3">
+                            <img class="rounded-full h-12 w-12   object-cover" src="https://image.tmdb.org/t/p/w500${movies.poster_path}" alt="unsplash image">
+                        </td>
+                        <td class="p-3">${movies.original_title}</td>
+                        <td class="p-3">${movies.overview}</td>
+                        <td class="p-3">${movies.release_date}</td>
+                    </tr>
+                    `
+                    movieInf.push(element);
+
                     $('.query').empty().append(movieInf.join(''));
                 }
 
-                function search(){
-                    var moviesearch=[];
+                function getRecom(){
+                    const settings = {
+                        async: true,
+                        crossDomain: true,
+                        url: 'https://api.themoviedb.org/3/movie/{{ movieId }}/recommendations?language=en-US&page=1',
+                        method: 'GET',
+                        headers: {
+                            accept: 'application/json',
+                            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkMTlmN2Q3MmYzOGQ2ZjIzNDEzZTVjODRjZmNmYTMwNSIsInN1YiI6IjY0ZGJhZGM5Yjc3ZDRiMTE0MjVkZmEwNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.OE2bMBkUtaosNS2qL0Sik6tci6W5dGw3AtQFcpH-Elg'
+                        }
+                    };
 
-
-
-
-
-                    var input;
-                    input = $("#searchbar").val();
-                    if (input.length==0){
-                        render(movies)
-                    }
-                    else{
-                        movies.map(function (movie){
-                            if (movie.original_title==input){
-                                moviesearch.push(movie);
-                                console.log(moviesearch)
-                            }
-
-
-                        })
-                        render(moviesearch)
-
-                    }
-
-
+                    $.ajax(settings).done(function (response) {
+                        recmovies=response.results;
+                        renderrec(recmovies)
+                    });
                 }
+                function renderrec(recmovies){
+                    var movieInf= []
+                    var i;
+                    var k=recmovies;
+                    var elements= []
+
+
+                    for (i = 0; i < recmovies.length; ++i) {
+                        var element = `<div class=""><a href="/movie/${k[i].id}">
+
+								<img class="" src="https://image.tmdb.org/t/p/w500${k[i].poster_path}" >
+
+                            <h1 class="p-3 text-white opacity-75 font-bold leading-tight text-center md:text-center" >${k[i].original_title}</h1>
+                            </a>
+                        </div>`
+                        movieInf.push(element);
+                    }
+                    $('.recquery').empty().append(movieInf.join(''));
+                }
+
+
+
+
+
 
 
 
@@ -116,6 +153,7 @@
 
                 $( document ).ready(function() {
                     getdata()
+                    getRecom()
 
 
                 });
@@ -128,6 +166,7 @@
     </head>
     <body>
         {% block body %}
+
             <div class="flex  justify-center min-h-screen bg-gray-900">
                 <div class="col-span-12">
                     <div class="overflow-auto lg:overflow-visible ">
@@ -144,6 +183,31 @@
 
                             </tbody>
                         </table>
+
+
+                        <ul class="list-disc">
+                            <!-- ... -->
+                        </ul>
+                        <h1 class="my-4 text-3xl md:text-5xl text-white opacity-75 font-bold leading-tight text-center md:text-center">
+                            Comments:</h1>
+                        <div class=" grid grid-cols-2 gap-4">
+                            <textarea id="freeform" name="freeform" rows="4" cols="50">
+                            Enter text here...
+                            </textarea>
+                            <ul class="">
+                            <!-- ... -->
+                            </ul>
+
+
+                        </div>
+
+
+                        <h1 class="my-4 text-3xl md:text-5xl text-white opacity-75 font-bold leading-tight text-center md:text-center">
+                            Recommendations</h1>
+                        <div class="recquery grid grid-cols-7 gap-4">
+
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -170,6 +234,10 @@
                     border-radius: .625rem 0 0 .625rem;
                 }
             </style>
+
+
+
+
         {% endblock %}
     </body>
 </html>
