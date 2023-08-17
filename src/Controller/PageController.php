@@ -29,13 +29,53 @@ class PageController extends AbstractController
 
         ]);
     }
+    #[Route('/register')]
+    public function register(Request $request,EntityManagerInterface $entityManager,
+                             LoggerInterface $logger): Response
+    {
+
+
+        $email = $request->get("email", null);
+        $password = $request->get("password", null);
+
+        $connection = $entityManager->getConnection();
+
+
+        $user = $connection->executeQuery("SELECT id, password, email FROM user WHERE email = 'andrea.hernandez@tilatina.com' ");
+
+        $user = $user->fetchAssociative()   ;
+
+        $logger->debug("USUARIO::::::::::::::::::::");
+        $logger->debug(json_encode($user));
+        return $this->render('user/register.html.twig',[
+
+        ]);
+    }
 
 
     #[Route('/homepage', name: "homepage")]
     public function home(Request $request): Response
     {
 
-        return $this->render('user/base.html.twig',[
+
+        return $this->render('user/homepage.html.twig',[
+
+        ]);
+    }
+    #[Route('/userSettings')]
+    public function userinfo(Request $request): Response
+    {
+
+        return $this->render('user/userinfo.html.twig',[
+
+        ]);
+    }
+    #[Route('/favorites/{movieId}')]
+    public function userbookmark(Request $request, $movieId): Response
+    {
+
+        return $this->render('user/favorites.html.twig',[
+            "movieId" => $movieId
 
         ]);
     }
@@ -66,7 +106,7 @@ class PageController extends AbstractController
 
         $user = $connection->executeQuery("SELECT id, password, email FROM user WHERE email = 'andrea.hernandez@tilatina.com' ");
 
-        $user = $user->fetchAssociative();
+        $user = $user->fetchAssociative()   ;
 
         $logger->debug("USUARIO::::::::::::::::::::");
         $logger->debug(json_encode($user));

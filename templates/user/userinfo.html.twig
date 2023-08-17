@@ -1,0 +1,75 @@
+{%use "user/header.html.twig" %}
+
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+        <script src="https://cdn.tailwindcss.com"></script>
+        {% block stylesheets %}
+
+        {% endblock %}
+
+        {% block javascripts %}
+            <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+            <script>
+
+
+
+
+            </script>
+
+        {% endblock %}
+    </head>
+    <body>
+        {% block header %}
+            {{ parent() }}
+        {% endblock %}
+        {% block body %}
+
+            <div class="flex  justify-center min-h-screen bg-gray-900">
+                <div class="col-span-12">
+                    <div class="overflow-auto lg:overflow-visible ">
+
+
+
+                        <h1 class="my-4 text-3xl md:text-5xl text-white opacity-75 font-bold leading-tight text-center md:text-center">
+                            User</h1>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <style>
+                .table {
+                    border-spacing: 0 15px;
+                }
+
+                i {
+                    font-size: 1rem !important;
+                }
+
+                .table tr {
+                    border-radius: 20px;
+                }
+
+                tr td:nth-child(n+5),
+                tr th:nth-child(n+5) {
+                    border-radius: 0 .625rem .625rem 0;
+                }
+
+                tr td:nth-child(1),
+                tr th:nth-child(1) {
+                    border-radius: .625rem 0 0 .625rem;
+                }
+            </style>
+
+
+
+
+        {% endblock %}
+    </body>
+</html>
