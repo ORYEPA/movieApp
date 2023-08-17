@@ -1,105 +1,18 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    {% block stylesheets %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-    {% endblock %}
-
-    {% block javascripts %}
-        <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
-        <script>
-            var movies=[];
-
-
-            function getdata(){
-                const settings = {
-                    async: true,
-                    crossDomain: true,
-                    url: 'https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1',
-                    method: 'GET',
-                    headers: {
-                        accept: 'application/json',
-                        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkMTlmN2Q3MmYzOGQ2ZjIzNDEzZTVjODRjZmNmYTMwNSIsInN1YiI6IjY0ZGJhZGM5Yjc3ZDRiMTE0MjVkZmEwNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.OE2bMBkUtaosNS2qL0Sik6tci6W5dGw3AtQFcpH-Elg'
-                    }
-                };
-
-                $.ajax(settings).done(function (response) {
-
-                    movies=response.results;
-
-
-
-
-                });
-            }
-            $('#searchbar').on("keyup",function() {
-                search();
-
-            });
-
-
-            function search(){
-                var moviesearch=[];
-
-                var input;
-                input = $("#searchbar").val();
-                console.log(input);
-                if (input.length==0){
-                    render(movies)
-                }
-                else{
-                    movies.map(function (movie){
-                        if (movie.original_title==input){
-                            moviesearch.push(movie);
-
-                        }
-
-
-                    })
-                    render(moviesearch)
-
-                }
-
-
-            }
-
-
-
-
-        </script>
-
-    {% endblock %}
-</head>
-<body>
 {% block header %}
-
-
     <nav class="bg-gray-100 border-gray-200 dark:bg-gray-900">
         <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
             <a href="/homepage" class="flex items-center">
                 <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">MovieApp</span>
             </a>
             <div class="flex md:order-2">
+                <select   class="filtrgens bg-gray-300">
+                    <option selected>Choose a genere</option>
+
+                </select>
 
 
                 <div class="relative hidden md:block">
+
                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                         <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
@@ -128,12 +41,105 @@
                 </ul>
             </div>
         </div>
+
     </nav>
 
+    <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+    <script>
+
+        function search(){
+            var moviesearch=[];
+
+            var input;
+            input = $("#searchbar").val();
+            console.log(input);
+            if (input.length==0){
+                render(movies)
+            }
+            else{
+                movies.map(function (movie){
+                    if (movie.original_title==input){
+                        moviesearch.push(movie);
+
+                    }
 
 
+                })
+                render(moviesearch)
+
+            }
+        }
+        function filtergen(gid){
+            const settings = {
+                async: true,
+                crossDomain: true,
+                url: 'https://api.themoviedb.org/3/discover/movie?' +
+                    'include_adult=false&include_video=false&language=en-US&' +
+                    'page=1&sort_by=popularity.desc&with_genres='+gid,
+                method: 'GET',
+                headers: {
+                    accept: 'application/json',
+                    Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkMTlmN2Q3MmYzOGQ2ZjIzNDEzZTVjODRjZmNmYTMwNSIsInN1YiI6IjY0ZGJhZGM5Yjc3ZDRiMTE0MjVkZmEwNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.OE2bMBkUtaosNS2qL0Sik6tci6W5dGw3AtQFcpH-Elg'
+                }
+            };
+
+            $.ajax(settings).done(function (response) {
+                var gensearch=response.results;
+                render(gensearch)
+
+            });
+
+        }
+
+        function getgenresHeader() {
+            const settings = {
+                async: true,
+                crossDomain: true,
+                url: 'https://api.themoviedb.org/3/genre/movie/list?language=en',
+                method: 'GET',
+                headers: {
+                    accept: 'application/json',
+                    Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkMTlmN2Q3MmYzOGQ2ZjIzNDEzZTVjODRjZmNmYTMwNSIsInN1YiI6IjY0ZGJhZGM5Yjc3ZDRiMTE0MjVkZmEwNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.OE2bMBkUtaosNS2qL0Sik6tci6W5dGw3AtQFcpH-Elg'
+                }
+            };
+
+            $.ajax(settings).done(function (response) {
+                let generesXPelicula = [];
+                var genred = response.genres;
+
+                genred.map(function (genere) {
+                    console.log(genere.id)
 
 
+                    var element = `
+                        <option value="${genere.id}">${genere.name}</option>`
+                    generesXPelicula.push(element);
+                });
+
+                $('.filtrgens').append(generesXPelicula.join(''))
+
+
+            })
+        };
+
+
+        $(document).ready(function() {
+            getgenresHeader()
+
+            $('#searchbar').on("keyup",function() {
+                search();
+
+            });
+            $('.filtrgens').change(function (event){
+                let gId = event.target.value;
+                console.log({gId})
+
+                filtergen(gId);
+            })
+        });
+
+
+    </script>
 {% endblock %}
-</body>
-</html>
+
+
