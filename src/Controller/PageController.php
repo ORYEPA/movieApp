@@ -102,9 +102,9 @@ class PageController extends AbstractController
         $password = $request->get("password", null);
 
         $connection = $entityManager->getConnection();
-        
 
-        $user = $connection->executeQuery("SELECT id, password, email FROM user WHERE email = 'andrea.hernandez@tilatina.com' ");
+        $user = $connection->executeQuery("SELECT id, password, email FROM user 
+                           WHERE email = 'andrea.hernandez@tilatina.com' ");
 
         $user = $user->fetchAssociative()   ;
 
