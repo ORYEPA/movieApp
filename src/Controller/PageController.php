@@ -33,13 +33,10 @@ class PageController extends AbstractController
     public function register(Request $request,EntityManagerInterface $entityManager,
                              LoggerInterface $logger): Response
     {
-
-
         $email = $request->get("email", null);
         $password = $request->get("password", null);
 
         $connection = $entityManager->getConnection();
-
 
         $user = $connection->executeQuery("SELECT id, password, email FROM user WHERE email = 'andrea.hernandez@tilatina.com' ");
 
@@ -76,7 +73,6 @@ class PageController extends AbstractController
 
         return $this->render('user/favorites.html.twig',[
             "movieId" => $movieId
-
         ]);
     }
 
@@ -84,7 +80,6 @@ class PageController extends AbstractController
     #[Route('/movie/{movieId}')]
     public function movieInfo(Request $request, $movieId): Response
     {
-
         return $this->render('user/movieinfo.html.twig',[
             "movieId" => $movieId
         ]);
