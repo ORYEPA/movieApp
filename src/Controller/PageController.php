@@ -22,33 +22,24 @@ class PageController extends AbstractController
         ]);
     }
 
-    #[Route('/login')]
+    #[Route('/login', name:"login")]
     public function login(Request $request): Response
     {
         return $this->render('user/login.html.twig',[
 
         ]);
     }
-    #[Route('/register')]
-    public function register(Request $request,EntityManagerInterface $entityManager,
-                             LoggerInterface $logger): Response
+    #[Route('/register', name: "register")]
+    public function register(Request $request): Response
     {
 
 
-        $email = $request->get("email", null);
-        $password = $request->get("password", null);
-
-        $connection = $entityManager->getConnection();
 
 
-        $user = $connection->executeQuery("SELECT id, password, email FROM user WHERE email = 'andrea.hernandez@tilatina.com' ");
 
-        $user = $user->fetchAssociative()   ;
 
-        $logger->debug("USUARIO::::::::::::::::::::");
-        $logger->debug(json_encode($user));
         return $this->render('user/register.html.twig',[
-
+            "error" => false
         ]);
     }
 
@@ -102,21 +93,106 @@ class PageController extends AbstractController
         $password = $request->get("password", null);
 
         $connection = $entityManager->getConnection();
-        
 
-        $user = $connection->executeQuery("SELECT id, password, email FROM user WHERE email = 'andrea.hernandez@tilatina.com' ");
+        $userdb = $connection->executeQuery("
+            SELECT  password, email 
+            FROM user 
+            WHERE email = '$email' AND password= '$password' ");
 
-        $user = $user->fetchAssociative()   ;
+        $userExist = $userdb->fetchAssociative()   ;
 
-        $logger->debug("USUARIO::::::::::::::::::::");
-        $logger->debug(json_encode($user));
 
-        if($user) {
-            return $this->redirect("homepage");
+        if($userExist) {
+            $msg = "Ya existe usuario con el mismo correo o el mismo username";
+            return $this->redirectToRoute('homepage', [
+                "msg" => $msg
+            ]);
         }
 
-        return $this->render('user/login.html.twig',[
-            "error" => "Usuario no existe"
+        return $this->redirectToRoute('login', [
+            "msg" => "no existe, vete al register"
+
+        ]);
+
+    }
+
+    #[Route('/checkregister')]
+    public function checkregister(Request $request, EntityManagerInterface $entityManager,
+                               LoggerInterface $logger): Response
+    {
+        $email = $request->get("email", null);
+        $username = $request->get("username", null);
+        $password = $request->get("password", null);
+
+        $connection = $entityManager->getConnection();
+
+
+        //Primero, revisamos si existr algunn usuario con el mismo username o el mismo email
+
+        $userdb = $connection->executeQuery("
+            SELECT  password, email 
+            FROM user 
+            WHERE email = '$email' OR username = '$username' ");
+
+        $userExist = $userdb->fetchAssociative()   ;
+
+        if($userExist) {
+            $msg = "Ya existe usuario con el mismo correo o el mismo username";
+            return $this->redirectToRoute('register', [
+                "msg" => $msg
+            ]);
+        }
+
+        $query =  $connection->executeQuery("INSERT INTO user (email, password, username) values('$email','$password','$username')");
+
+
+
+
+        $msg = "Se ha registrado el ysuario";
+        return $this->redirectToRoute('login', [
+            "msg" => $msg
+
+        ]);
+
+    }
+    #[Route('/checkfavorite')]
+    public function checkfavorite(Request $request, EntityManagerInterface $entityManager,
+                               LoggerInterface $logger): Response
+    {
+        $movie_id = $request->get("movieid", null);
+        $action = $request->get("action", null);
+        $userId = 1; // TODO: en el futuro tendra que salir de la "session"
+
+
+        $connection = $entityManager->getConnection();
+
+        // if SELECT **+** dsadsa
+        $existMovie = $connection->fetchOne("
+            SELECT movie_id 
+            FROM user_favorites 
+            WHERE movie_id = $movie_id AND 
+                  user_id = $userId");
+
+        $logger->debug("EXISTE zz:".json_encode($existMovie));
+
+        if(!$existMovie) {
+            $action = "Guardado";
+            $connection->executeQuery("
+                INSERT INTO user_favorites (user_id, movie_id) 
+                values($userId, '$movie_id')");
+        } else{
+            $action = "Borrado";
+            $connection->executeQuery("
+                DELETE 
+                FROM user_favorites
+                WHERE movie_id = $movie_id 
+                  AND user_id = $userId 
+                ");
+        }
+
+        return $this->json([
+            "guardao??" => $action,
+            "mov" => $existMovie
         ]);
 
     }

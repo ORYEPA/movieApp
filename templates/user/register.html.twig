@@ -9,11 +9,7 @@
 
         {% endblock %}
 
-        {% block javascripts %}
-            <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
-            <script>
-            </script>
-        {% endblock %}
+
     </head>
     <body>
         {% block body %}
@@ -31,7 +27,9 @@
                                 Create an account
                             </h1>
 
-                            <form class="space-y-4 md:space-y-6" action="/checkLogin" method="post">
+                            <form class="space-y-4 md:space-y-6"
+                                  action="/checkregister"
+                                  method="post">
                                 <div>
                                     <label for="" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                         Your email
@@ -75,13 +73,22 @@
                                         class="w-full text-blue bg-primary-600 hover:bg-primary-700 focus:ring-4
                                         focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                                     Register</button>
-
-
                             </form>
                         </div>
                     </div>
                 </div>
             </section>
+        {% endblock %}
+
+
+        {% block javascripts %}
+            <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+            <script>
+
+                {% if error is defined and error %}
+                alert("{{ error }}");
+                {% endif %}
+            </script>
         {% endblock %}
     </body>
 </html>

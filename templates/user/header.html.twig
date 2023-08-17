@@ -52,7 +52,6 @@
 
             var input;
             input = $("#searchbar").val();
-            console.log(input);
             if (input.length==0){
                 render(movies)
             }
@@ -108,7 +107,6 @@
                 var genred = response.genres;
 
                 genred.map(function (genere) {
-                    console.log(genere.id)
 
 
                     var element = `
