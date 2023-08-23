@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+use Doctrine\DBAL\DriverManager;
 
 class PageController extends AbstractController
 {
@@ -67,18 +68,93 @@ class PageController extends AbstractController
 
         return $this->render('user/favorites.html.twig',[
             "movieId" => $movieId
-
         ]);
     }
 
 
     #[Route('/movie/{movieId}')]
-    public function movieInfo(Request $request, $movieId): Response
+    public function movieInfo(Request $request, $movieId, EntityManagerInterface $entityManager,
+                              LoggerInterface $logger): Response
     {
-
         return $this->render('user/movieinfo.html.twig',[
             "movieId" => $movieId
+
+
         ]);
+
+
+    }
+
+    #[Route('/movie/{movieId}/Checkcomments')]
+    public function comments(Request $request, EntityManagerInterface $entityManager,
+                              LoggerInterface $logger): Response
+    {
+
+
+
+        $connection = $entityManager->getConnection();
+
+        $comments=$request->get("comment", null);
+        $userId = 13;
+        $movie_id = $request->get("movieid", null);
+        $datem = $request->get("date", null);
+
+
+        $query =$connection->executeQuery("INSERT INTO 
+        comments (movie_id, comments, user_id,datem) 
+        values('$movie_id','$comments','$userId', utc_timestamp())");
+        return $this->json(["valor"=>"ok"]);
+
+    }
+
+    #[Route('/movie/{movieId}/chargeComments')]
+    public function getcomments(Request $request,$movieId,
+                                EntityManagerInterface $entityManager,
+                             LoggerInterface $logger): Response
+    {
+
+        $movie_id = $request->get("movieid", null);
+        $userId = 4;
+        $connection = $entityManager->getConnection();
+        $comments = $connection->fetchAllAssociative("
+            SELECT comments, u.username, u.email ,datem
+            FROM comments 
+                JOIN dbprueba.user u on comments.user_id = u.id
+            WHERE movie_id = $movie_id"
+                  );
+        if(!$comments) {
+            $action = "No Tiene comentarios";
+
+
+        }else{
+            $action = "tiene comentarios";
+
+        }
+        return $this->json([
+            "Tiene comentarios" => $action,
+
+            "comments" => $comments,
+            "pelicula"=> $movie_id
+        ]);
+
+    }
+    #[Route('/movie/{movieId}/deleteComments')]
+    public function deletecomments(Request $request,$movieId,
+                                EntityManagerInterface $entityManager,
+                                LoggerInterface $logger): Response
+    {
+
+        $movie_id = $request->get("movieid", null);
+        $userId = 4;
+        $connection = $entityManager->getConnection();
+        $connection->executeQuery("
+                DELETE 
+                FROM comments
+                WHERE movie_id = $movie_id 
+                  AND user_id = $userId AND comments=$comments
+                ");
+
+
     }
 
 
@@ -148,7 +224,7 @@ class PageController extends AbstractController
 
 
 
-        $msg = "Se ha registrado el ysuario";
+        $msg = "Se ha registrado el usuario";
         return $this->redirectToRoute('login', [
             "msg" => $msg
 
