@@ -178,6 +178,7 @@
                 $.ajax(settings).done(function (response) {
                     console.log("Render comments response")
                     commentslist=response.comments;
+                    console.log(commentslist)
 
 
                     var movieInf= []
@@ -205,7 +206,7 @@
                     });
                     $('.commentList').empty().append(movieInf.join(''));
 
-                    cb()
+                    cb();
                 });
 
 
@@ -234,6 +235,26 @@
                 }
                 $('.recquery').empty().append(movieInf.join(''));
             }
+            function deletecomments(comments,cb){
+                const settings = {
+
+                    url: '/movie/{{movieId}}/deleteComments',
+                    data:{
+
+                        comments:comments
+                    }
+                };
+                $.ajax(settings).done(function (response) {
+
+                    console.log(response)
+                    //cb();
+
+
+
+                })
+
+
+            };
 
             $( document ).ready(function() {
                 getdata();
@@ -250,8 +271,13 @@
                     });
                 });
                 $('.commentList').on("click",".deletebut",function(){
-
-                        console.log("se borro")
+                    deletecomments(() => {
+                        console.log("se borrro");
+                        rendercomments(() => {
+                            $(".comments").val("");
+                            console.log("cargo sin el comentario")
+                        });
+                    });
 
                 });
             });

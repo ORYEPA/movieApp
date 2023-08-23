@@ -95,7 +95,7 @@ class PageController extends AbstractController
         $connection = $entityManager->getConnection();
 
         $comments=$request->get("comment", null);
-        $userId = 13;
+        $userId = 1;
         $movie_id = $request->get("movieid", null);
         $datem = $request->get("date", null);
 
@@ -114,7 +114,6 @@ class PageController extends AbstractController
     {
 
         $movie_id = $request->get("movieid", null);
-        $userId = 4;
         $connection = $entityManager->getConnection();
         $comments = $connection->fetchAllAssociative("
             SELECT comments, u.username, u.email ,datem
@@ -144,15 +143,24 @@ class PageController extends AbstractController
                                 LoggerInterface $logger): Response
     {
 
-        $movie_id = $request->get("movieid", null);
-        $userId = 4;
+        $movie_id = $request->get("movieId", null);
+        $comments = $request->get("comment", null);
+
+        $userId = 1;
         $connection = $entityManager->getConnection();
         $connection->executeQuery("
                 DELETE 
                 FROM comments
                 WHERE movie_id = $movie_id 
-                  AND user_id = $userId AND comments=$comments
+                  AND user_id = $userId
                 ");
+        $action ="si se borro, creo";
+
+        return $this->json([
+            "se borro?" => $action,
+
+
+        ]);
 
 
     }
