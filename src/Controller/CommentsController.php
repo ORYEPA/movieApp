@@ -18,24 +18,21 @@ class CommentsController extends AbstractController
 
 
     #[Route('/movie/{movieId}/Checkcomments')]
-    public function comments(Request         $request, EntityManagerInterface $entityManager,
+    public function comments(Request $request,
+                             EntityManagerInterface $entityManager,
                              LoggerInterface $logger): Response
     {
-
-
         $connection = $entityManager->getConnection();
-
         $comments = $request->get("comment", null);
-        $userId = 14;
+        $userId = 1;
         $movie_id = $request->get("movieid", null);
         $datem = $request->get("date", null);
 
-
         $query = $connection->executeQuery("INSERT INTO 
-        comments (movie_id, comments, user_id,datem) 
-        values('$movie_id','$comments','$userId', utc_timestamp())");
-        return $this->json(["valor" => "ok"]);
+            comments (movie_id, comments, user_id,datem) 
+            values('$movie_id','$comments','$userId', utc_timestamp())");
 
+        return $this->json(["valor" => "ok"]);
     }
 
     #[Route('/movie/{movieId}/chargeComments')]
@@ -74,7 +71,7 @@ class CommentsController extends AbstractController
                                 LoggerInterface        $logger): Response
     {
 
-        $id = 14;
+        $id = 1;
         $connection = $entityManager->getConnection();
         $comments = $connection->fetchAllAssociative("
             SELECT comments, movie_id,datem
@@ -108,7 +105,7 @@ class CommentsController extends AbstractController
         $movie_id = $request->get("movieId", null);
         $comments = $request->get("comment", null);
 
-        $userId = 14;
+        $userId = 1;
         $connection = $entityManager->getConnection();
         $connection->executeQuery("
                 DELETE 

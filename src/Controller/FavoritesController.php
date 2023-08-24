@@ -28,7 +28,7 @@ class FavoritesController extends AbstractController
                               LoggerInterface $logger): Response
     {
         $connection = $entityManager->getConnection();
-        $userid=14;
+        $userid=1;
         $comments = $connection->fetchAllAssociative("
             SELECT movie_id
             FROM user_favorites 
@@ -59,7 +59,7 @@ class FavoritesController extends AbstractController
     {
         $movie_id = $request->get("movieid", null);
         $action = $request->get("action", null);
-        $userId = 14; // TODO: en el futuro tendra que salir de la "session"
+        $userId = 1; // TODO: en el futuro tendra que salir de la "session"
 
 
         $connection = $entityManager->getConnection();
