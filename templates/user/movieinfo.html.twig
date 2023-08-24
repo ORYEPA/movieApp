@@ -1,4 +1,5 @@
 {%use "user/header.html.twig" %}
+{%use "user/tablemovieformat.html.twig" %}
 
 <!DOCTYPE html>
 <html>
@@ -81,17 +82,17 @@
 
                         <h1 class="my-4 text-3xl md:text-5xl text-white opacity-75 font-bold leading-tight text-center md:text-center">
                             Recommendations</h1>
-                        <div class="recquery grid grid-cols-7 gap-4">
+                        {% block tablemovieformat %}
+                            {{ parent() }}
+                        {% endblock %}
 
-
-                        </div>
                     </div>
                 </div>
             </div>
 
         <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
         <script>
-            let movies=[];
+            let moviesIn=[];
 
             function getdata(){
                 const settings = {
@@ -106,9 +107,9 @@
                 };
 
                 $.ajax(settings).done(function (response) {
-                    movies=response;
+                    moviesIn=response;
 
-                    render(movies)
+                    renderinfo(moviesIn)
                 });
             }
             function checkcomments(cb){
@@ -132,23 +133,23 @@
                 });
             }
 
-            function render(movies){
-                let gen=movies.genres
+            function renderinfo(moviesIn){
+                let gen=moviesIn.genres
                 let generesXPelicula = [];
 
                 gen.map(function (idmov){
                     generesXPelicula.push(idmov.name);
                 });
 
-                $("#cardPoster").attr("src", `https://image.tmdb.org/t/p/w500${movies.poster_path}`);
-                $("#cardTitle").text(movies.original_title)
-                $("#cardReview").text(movies.overview)
+                $("#cardPoster").attr("src", `https://image.tmdb.org/t/p/w500${moviesIn.poster_path}`);
+                $("#cardTitle").text(moviesIn.original_title)
+                $("#cardReview").text(moviesIn.overview)
                 $("#cardGenres").text(generesXPelicula.join(" | "))
 
 
             }
 
-            function getRecom(){
+            function getdatatable(){
                 const settings = {
                     async: true,
                     crossDomain: true,
@@ -162,7 +163,7 @@
 
                 $.ajax(settings).done(function (response) {
                     let recmovies = response.results;
-                    renderrec(recmovies)
+                    render(recmovies)
                 });
             }
 
@@ -214,27 +215,7 @@
 
             }
 
-            function renderrec(recmovies){
-                var movieInf= []
-                var i;
-                var k=recmovies;
-                let element;
 
-                for (i = 0; i < recmovies.length; ++i) {
-                    element = `
-                        <div class="">
-                            <a href="/movie/${k[i].id}">
-								<img class="" src="https://image.tmdb.org/t/p/w500${k[i].poster_path}" >
-                                <h1 class="p-3 text-white opacity-75 font-bold leading-tight
-                                    text-center md:text-center" >
-                                    ${k[i].original_title}
-                                </h1>
-                            </a>
-                        </div>`
-                    movieInf.push(element);
-                }
-                $('.recquery').empty().append(movieInf.join(''));
-            }
             function deletecomments(comments,cb){
                 const settings = {
 
@@ -258,7 +239,7 @@
 
             $( document ).ready(function() {
                 getdata();
-                getRecom();
+                getdatatable();
                 rendercomments(function() {});
 
                 $('.sendComment').on("click",function() {

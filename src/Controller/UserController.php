@@ -13,85 +13,33 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Doctrine\DBAL\DriverManager;
 
-class PageController extends AbstractController
+class UserController extends AbstractController
 {
-    #[Route('/')]
-    public function index(Request $request)
+
+
+
+
+    #[Route('/AccessUserInfo')]
+    public function userinfo(Request $request, EntityManagerInterface $entityManager,
+                             LoggerInterface $logger): Response
     {
-        return $this->render('index.html.twig',[
+        $connection = $entityManager->getConnection();
+        $idu=14;
 
-        ]);
-    }
-
-    #[Route('/login', name:"login")]
-    public function login(Request $request): Response
-    {
-        return $this->render('user/login.html.twig',[
-
-        ]);
-    }
-    #[Route('/register', name: "register")]
-    public function register(Request $request): Response
-    {
+        $userdb = $connection->executeQuery("
+            SELECT email ,username
+            FROM user 
+            WHERE id=$idu ");
+        $userExist = $userdb->fetchAssociative()   ;
+        return $this->json([
 
 
-
-
-
-
-        return $this->render('user/register.html.twig',[
-            "error" => false
-        ]);
-    }
-
-
-    #[Route('/homepage', name: "homepage")]
-    public function home(Request $request): Response
-    {
-
-
-        return $this->render('user/homepage.html.twig',[
-
-        ]);
-    }
-    #[Route('/userSettings')]
-    public function userinfo(Request $request): Response
-    {
-
-        return $this->render('user/userinfo.html.twig',[
-
-        ]);
-    }
-    #[Route('/Usercomments')]
-    public function usercomments(Request $request): Response
-    {
-
-        return $this->render('user/Usercomments.html.twig',[
-
-        ]);
-    }
-    #[Route('/UserLists')]
-    public function userlists(Request $request): Response
-    {
-
-        return $this->render('user/Userlists.html.twig',[
+            "info" => $userExist,
 
         ]);
     }
 
 
-    #[Route('/movie/{movieId}')]
-    public function movieInfo(Request $request, $movieId, EntityManagerInterface $entityManager,
-                              LoggerInterface $logger): Response
-    {
-        return $this->render('user/movieinfo.html.twig',[
-            "movieId" => $movieId
-
-
-        ]);
-
-
-    }
 
 
 
@@ -131,7 +79,7 @@ class PageController extends AbstractController
 
     #[Route('/checkregister')]
     public function checkregister(Request $request, EntityManagerInterface $entityManager,
-                               LoggerInterface $logger): Response
+                                  LoggerInterface $logger): Response
     {
         $email = $request->get("email", null);
         $username = $request->get("username", null);
