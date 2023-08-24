@@ -91,27 +91,16 @@
             </div>
 
         <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+        <script src="{{ asset("assets/js/movieUtils.js") }}"></script>
+
         <script>
             let moviesIn=[];
 
-            function getdata(){
-                const settings = {
-                    async: true,
-                    crossDomain: true,
-                    url: 'https://api.themoviedb.org/3/movie/{{ movieId }}?language=en-US',
-                    method: 'GET',
-                    headers: {
-                        accept: 'application/json',
-                        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkMTlmN2Q3MmYzOGQ2ZjIzNDEzZTVjODRjZmNmYTMwNSIsInN1YiI6IjY0ZGJhZGM5Yjc3ZDRiMTE0MjVkZmEwNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.OE2bMBkUtaosNS2qL0Sik6tci6W5dGw3AtQFcpH-Elg'
-                    }
-                };
+            /**
+             * Creamos objeto de la clase de utilidades
+             */
+            let movieUtils = new MovieUtils();
 
-                $.ajax(settings).done(function (response) {
-                    moviesIn=response;
-
-                    renderinfo(moviesIn)
-                });
-            }
             function checkcomments(cb){
                 var input;
                 input = $(".comments").val();
@@ -133,20 +122,21 @@
                 });
             }
 
-            function renderinfo(moviesIn){
-                let gen=moviesIn.genres
+            async function renderinfo(){
+                let movie = await movieUtils.getMovieInfo("{{ movieId }}");
+                console.log("desde GetData", movie);
+
+                let gen = movie.genres
                 let generesXPelicula = [];
 
                 gen.map(function (idmov){
                     generesXPelicula.push(idmov.name);
                 });
 
-                $("#cardPoster").attr("src", `https://image.tmdb.org/t/p/w500${moviesIn.poster_path}`);
-                $("#cardTitle").text(moviesIn.original_title)
-                $("#cardReview").text(moviesIn.overview)
-                $("#cardGenres").text(generesXPelicula.join(" | "))
-
-
+                $("#cardPoster").attr("src", `https://image.tmdb.org/t/p/w500${movie.poster_path}`);
+                $("#cardTitle").text(movie.original_title);
+                $("#cardReview").text(movie.overview);
+                $("#cardGenres").text(generesXPelicula.join(" | "));
             }
 
             function getdatatable(){
@@ -238,7 +228,9 @@
             };
 
             $( document ).ready(function() {
-                getdata();
+
+                renderinfo(moviesIn)
+
                 getdatatable();
                 rendercomments(function() {});
 

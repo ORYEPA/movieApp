@@ -9,9 +9,6 @@
     <script>
         var movies=[];
 
-
-
-
         function render(movies){
             var movieInf= []
             var i;
@@ -95,6 +92,7 @@
 
             });
         }
+
         function checkFavorites(movieid,action){
             const settings = {
 
@@ -114,8 +112,6 @@
         }
 
         $( document ).ready(function() {
-
-
 
             $('.query').on("click", ".favSelect", function() {
                 //$(this).toggleClass( "fill-amber-500" );
