@@ -28,7 +28,7 @@ class FavoritesController extends AbstractController
                               LoggerInterface $logger): Response
     {
         $connection = $entityManager->getConnection();
-        $userid=1;
+        $userid=14;
         $comments = $connection->fetchAllAssociative("
             SELECT movie_id
             FROM user_favorites 
