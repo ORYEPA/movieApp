@@ -67,7 +67,7 @@
             $("#modalGlobal").show();
         }
 
-        function renderBodyGlobalModal(title, body) {
+        function renderBodyGlobalModal(title = '', body = '') {
             $("#titleGlobalModal").text(title);
             $("#bodyGlobalModal").empty().append(body);
         }
