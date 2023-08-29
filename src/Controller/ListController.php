@@ -23,7 +23,14 @@ class ListController extends AbstractController
     {
         $connection = $entityManager->getConnection();
         $nameli = $request->get("nameli", null);
-        $userId = 14;
+        $userId = 1;
+
+        if((strlen(trim($nameli))) == 0 || is_null($nameli)) {
+            return $this->json([
+                "code" => Response::HTTP_BAD_REQUEST,
+                "msg" => "No se recibió nombre de la lista"
+            ]);
+        }
 
         $query = $connection->executeQuery("INSERT INTO 
             listname ( nameli, userid) 
@@ -45,16 +52,20 @@ class ListController extends AbstractController
             list_movie (list_id, movie_id) 
             values('$list_id','$movie_id')");
 
-        return $this->json(["valor" => "jalo"]);
+        return $this->json([
+            "valor" => "jalo"
+        ]);
 
     }
+
+
     #[Route('/chargelist')]
     public function getcommentsbuser(Request $request,
                                      EntityManagerInterface $entityManager,
                                      LoggerInterface        $logger): Response
     {
 
-        $id = 14;
+        $id = 1;
         $connection = $entityManager->getConnection();
         $list = $connection->fetchAllAssociative("
             SELECT nameli,listid
@@ -64,17 +75,14 @@ class ListController extends AbstractController
         );
         if (!$list) {
             $action = "No Tiene listas";
-
-
         } else {
             $action = "tiene listas";
 
         }
         return $this->json([
-            "Tiene comentarios" => $action,
-
+            "code" => Response::HTTP_OK,
+            "msg" => $action,
             "list" => $list
-
         ]);
 
     }
