@@ -52,7 +52,7 @@
                 async function getdatatable(groupedComments){
                     var movieList= []
                     var movieInf= []
-                    let comentariosxpelicula = [];
+
                     var liscom=[]
 
                     groupedComments.map(function(movied) {
@@ -81,6 +81,7 @@
 
                     }
                     movies.map(function(movie) {
+                        let comentariosxpelicula = [];
                         liscom.map(function(com) {
 
                             if(com.movie_id == movie.id) {

@@ -11,7 +11,7 @@ const doAjax = async (url, params) => {
 //Funciones para reusar.
 
 class MovieUtils {
-    API_KEY = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkMTlmN2Q3MmYzOGQ2ZjIzNDEzZTVjODRjZmNmYTMwNSIsInN1YiI6IjY0ZGJhZGM5Yjc3ZDRiMTE0MjVkZmEwNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.OE2bMBkUtaosNS2qL0Sik6tci6W5dGw3AtQFcpH-Elg";
+    API_KEY = "d19f7d72f38d6f23413e5c84cfcfa305";
     GET_MOVIE_INFO_BY_ID = 'https://api.themoviedb.org/3/movie/__MOVIE_ID__?language=en-US';
     GET_MOVIES = ""
 
