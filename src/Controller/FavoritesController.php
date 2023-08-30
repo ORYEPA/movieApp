@@ -59,7 +59,7 @@ class FavoritesController extends AbstractController
     {
         $movie_id = $request->get("movieid", null);
         $action = $request->get("action", null);
-        $userId = 1; // TODO: en el futuro tendra que salir de la "session"
+        $userId = 14; // TODO: en el futuro tendra que salir de la "session"
 
 
         $connection = $entityManager->getConnection();
