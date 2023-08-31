@@ -42,10 +42,69 @@
                             </div>
                         </div>
                         <div class="space-x-8 flex justify-between mt-32 md:mt-0 md:justify-center">
-
-                            <button  class="text-white py-2 px-4 uppercase rounded bg-gray-700 hover:bg-gray-800
+                            <div>
+                                <button  class="changepass text-white py-2 px-4 uppercase rounded bg-gray-700 hover:bg-gray-800
                             shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5">
-                                Change Password</button>
+                                    Change Password</button>
+                                <div
+                                        class="formpass !visible hidden rounded-lg shadow-lg"
+
+                                        >
+                                    <div class="mb-6">
+                                        <label  class="block mb-2 text-sm font-medium text-gray-900 ">Password</label>
+                                        <input type="password"
+                                               class="oldpss bg-gray-50 border
+                                               border-gray-300 text-gray-900
+                                               text-sm rounded-lg
+                                               focus:ring-blue-500 focus:border-blue-500
+                                               block w-full p-2.5 dark:bg-gray-700
+                                               dark:border-gray-600 dark:placeholder-gray-400
+                                               dark:text-white dark:focus:ring-blue-500
+                                               dark:focus:border-blue-500" placeholder="•••••••••"
+                                               required>
+                                    </div>
+                                    <div class="mb-6">
+                                        <label  class="block mb-2 text-sm font-medium text-gray-900 ">New password</label>
+                                        <input type="password"
+                                               class="newpasss bg-gray-50 border border-gray-300
+                                               text-gray-900 text-sm rounded-lg
+                                               focus:ring-blue-500 focus:border-blue-500
+                                               block w-full p-2.5 dark:bg-gray-700
+                                               dark:border-gray-600 dark:placeholder-gray-400
+                                               dark:text-white dark:focus:ring-blue-500
+                                               dark:focus:border-blue-500"
+                                               placeholder="•••••••••" required>
+                                    </div>
+                                    <div class="mb-6">
+                                        <label  class="block mb-2 text-sm font-medium text-gray-900 ">Confirm password</label>
+                                        <input type="password"
+                                               class="confirmpasss bg-gray-50 border border-gray-300
+                                               text-gray-900 text-sm rounded-lg
+                                               focus:ring-blue-500 focus:border-blue-500 block
+                                               w-full p-2.5 dark:bg-gray-700 dark:border-gray-600
+                                               dark:placeholder-gray-400 dark:text-white
+                                               dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                               placeholder="•••••••••" required>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-3">
+                                        <button  class="chanpasswo text-white py-2 px-4 uppercase rounded bg-gray-700 hover:bg-gray-800
+                            shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5">
+                                            Change</button>
+
+                                        <div>
+                                            <p class="font-bold text-gray-700 text-xl"></p>
+                                            <p class="text-gray-400"></p>
+                                        </div>
+
+                                        <button  class="cancelpass text-white py-2 px-4 uppercase rounded bg-gray-700 hover:bg-gray-800
+                            shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5">
+                                            Cancel</button>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
                         </div>
                     </div>
                     <div class="mt-20 text-center border-b pb-12">
@@ -62,17 +121,17 @@
                     </div>
                     <div class="grid grid-cols-3 gap-4">
 
-                        <a href="/favorites" class="text-white py-2 px-4 uppercase rounded bg-gray-700 hover:bg-gray-800
+                        <a href="{{ path('favorites') }}" class="text-white py-2 px-4 uppercase rounded bg-gray-700 hover:bg-gray-800
                     shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5">
                                 <button >
                                     Favorites</button>
                         </a>
-                        <a href="/Usercomments" class="text-white py-2 px-4 uppercase rounded bg-gray-700 hover:bg-gray-800
+                        <a href="{{ path('usercomments') }}" class="text-white py-2 px-4 uppercase rounded bg-gray-700 hover:bg-gray-800
                     shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5">
                             <button  >
                                 Comments</button>
                         </a>
-                        <a href="/UserLists" class="text-white py-2 px-4 uppercase rounded bg-gray-700 hover:bg-gray-800
+                        <a href="{{ path('userlist') }}" class="text-white py-2 px-4 uppercase rounded bg-gray-700 hover:bg-gray-800
                             shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5">
                              <button >
                                 Movie L</button>
@@ -110,7 +169,7 @@
             function getUserinfo(){
                 const settings = {
 
-                    url: '/AccessUserInfo',
+                    url: '/app/AccessUserInfo',
                     data: {
 
 
@@ -125,6 +184,24 @@
 
                 });
             }
+            function changepasww(oldpss,newpass,confirmpass){
+                const settings = {
+
+                    url: '/app/changepssword',
+                    data: {
+                        oldpss:oldpss,
+                        newpass:newpass,
+                        confirmpass:confirmpass
+
+
+                    }
+                };
+
+                $.ajax(settings).done(function (response) {
+                    console.log(response)
+                    alert(response.info);
+                });
+            }
             function render(){
 
             }
@@ -136,7 +213,7 @@
 
 
                 const settings = {
-                    url:'/addlist',
+                    url:'/app/addlist',
                     data: {
 
                         nameli: input,
@@ -162,6 +239,36 @@
                     checknamel()
                     console.log("nueva lista o no")
                 });
+                $('.changepass').on("click",function (){
+                    console.log("cambias tu contraseña o eso se supone")
+                    $('.formpass').removeClass( "!visible hidden" )
+
+                })
+                $('.cancelpass').on("click",function (){
+                    $('.formpass').addClass( "!visible hidden" )
+                })
+                $('.chanpasswo').on("click",function (){
+                    let oldpss= $('.oldpss').val();
+                    let newpass= $('.newpasss').val();
+                    let confirmpass= $('.confirmpasss').val();
+                    if (newpass != confirmpass){
+                        alert("Tu nueva contraseña es diferente");
+
+                    }
+                    else{
+                        changepasww(oldpss,newpass,confirmpass)
+                        $('.formpass').addClass( "!visible hidden" )
+
+
+                    }
+
+
+                    //alert("Se cambio tu contraseña");
+
+
+
+                })
+
 
 
 

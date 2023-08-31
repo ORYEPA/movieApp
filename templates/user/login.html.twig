@@ -16,6 +16,7 @@
         {% endblock %}
     </head>
     <body>
+        <div>{{ error ? error.messageKey|trans(error.messageData, 'security') : " "}}</div>
         {% block body %}
             <section class="bg-gray-900">
                 <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -31,14 +32,15 @@
                                 Sign in to your account
                             </h1>
 
-                            <form class="space-y-4 md:space-y-6" action="/checkLogin" method="post">
+                            <form class="space-y-4 md:space-y-6" action="{{ path('app_login') }}" method="post">
                                 <div>
                                     <label for="" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                         Your email
                                     </label>
                                     <input type="email"
-                                           name="email"
+                                           name="_username"
                                            id="email"
+                                           value="{{ last_username }}"
                                            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg
                                            focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5
                                            dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
@@ -49,7 +51,7 @@
                                     <label for="" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                         Password
                                     </label>
-                                    <input type="password" name="password"
+                                    <input type="password" name="_password"
                                            id="password"
                                            placeholder="••••••••"
                                            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg

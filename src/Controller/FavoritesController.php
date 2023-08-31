@@ -12,11 +12,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Doctrine\DBAL\DriverManager;
-
+#[Route('/app')]
 class FavoritesController extends AbstractController
 {
 
-    #[Route('/favorites')]
+    #[Route('/favorites',name:"favorites")]
     public function userbookmark(Request $request): Response
     {
 
@@ -28,7 +28,7 @@ class FavoritesController extends AbstractController
                               LoggerInterface $logger): Response
     {
         $connection = $entityManager->getConnection();
-        $userid=14;
+        $userid = $this->getUser()->getId();
         $comments = $connection->fetchAllAssociative("
             SELECT movie_id
             FROM user_favorites 
@@ -59,7 +59,7 @@ class FavoritesController extends AbstractController
     {
         $movie_id = $request->get("movieid", null);
         $action = $request->get("action", null);
-        $userId = 14; // TODO: en el futuro tendra que salir de la "session"
+        $userId = $this->getUser()->getId();
 
 
         $connection = $entityManager->getConnection();
@@ -68,8 +68,9 @@ class FavoritesController extends AbstractController
         $existMovie = $connection->fetchOne("
             SELECT movie_id 
             FROM user_favorites 
-            WHERE movie_id = $movie_id AND 
-                  user_id = $userId");
+            WHERE movie_id = $movie_id 
+                  AND user_id = $userId
+         ");
 
         $logger->debug("EXISTE zz:".json_encode($existMovie));
 

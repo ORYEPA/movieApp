@@ -47,9 +47,10 @@
                         });
                     });
 
-
+                    var url="{{ path("moviesinfo", {"movieId": "papas"}) }}"
+                    url=url.replace("papas",movie.id)
                     var element = `<div class="" >
-                            <a href="/movie/${movie.id}">
+                            <a href="${url}">
                                 <img class="" src="https://image.tmdb.org/t/p/w500${movie.poster_path}" >
                                 <h1 class="mb-2 mt-0 text-xl font-medium leading-tight text-primary text-white " >${movie.original_title}
                                 </h1>
@@ -106,7 +107,7 @@
         function checkFavorites(movieid,action){
             const settings = {
 
-                url: '/checkfavorite',
+                url: '/app/checkfavorite',
                 data:{movieid:movieid,
                     action:action}
             };
@@ -117,18 +118,38 @@
         function renderlist(cb){
             const settings = {
 
-                url: '/chargelist',
+                url: '/app/chargelist',
                 data:{}
             };
             $.ajax(settings).done(function (response) {
                 var listnm=response.list;
+                console.log(response)
                 cb(listnm)
+            });
+        }
+        function checknamel(movieId){
+
+
+
+
+            const settings = {
+                url:'/app/addlist',
+                data: {
+
+                    nameli: movieId
+
+                }
+            };
+
+            $.ajax(settings).done(function (response) {
+                console.log(response)
+
             });
         }
 
         function addmovietolist(movieId, list_id,val, cb){
             const settings = {
-                url: '/addmovielist',
+                url: '/app/addmovielist',
                 data: {
                     movieid: movieId ,
                     list_id:list_id,
@@ -167,7 +188,8 @@
 
             $('.query').on("click", ".favSelect", function() {
                 //$(this).toggleClass( "fill-amber-500" );
-                let movieid=$(this).attr("data-movieid");
+                let movieid=$(this).attr("data-movie");
+                console.log(movieid)
                 // si this tiene la clase fill, quitarsela
                 if ($(this).hasClass("fill-grey-500")){
                     $(this).removeClass( "fill-grey-500" ).addClass( "fill-amber-500");
@@ -199,12 +221,13 @@
                                     ${kl.nameli}
                                 </option>`
                     }).join('');
+
                     openGlobalModal();
                     renderBodyGlobalModal(`${movietitle}`, `
                         <div>
                             <select class="listaDePeliculas">
                             <option value="-1" data-movieid="-1">[Choose]</option>
-                            <option value="-2" data-movieid="-2">Nueva</option>
+                            <option value="-2" data-movieid="${movietitle}">Nueva</option>
                             ${options}
                             </select>
                         </div>
@@ -220,15 +243,21 @@
                 if(Number(optionSelectedId) === -1) {
                     alert("La lista es obligatoria");
                 }else if(Number(optionSelectedId) === -2) {
-                    //Mande a crear lista. mandar nombre de la pelicual
-                    // para que ese sea el nombre de la lista
+                    checknamel(movieId)
+                    closeGlobalModal();
+                    renderlist(function() {
+                        console.log("renderisa con nueva lista")
+                    });
                 }else {
                     addmovietolist(movieId, optionSelectedId,0, () => {
+                        renderlist(function() {});
                         closeGlobalModal();
+
 
                     });
 
                 }
+
             });
         });
     </script>

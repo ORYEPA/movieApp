@@ -2,6 +2,7 @@
 
 
 namespace App\Controller;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
@@ -12,7 +13,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Doctrine\DBAL\DriverManager;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
+#[Route('/app')]
 class UserController extends AbstractController
 {
 
@@ -24,12 +27,12 @@ class UserController extends AbstractController
                              LoggerInterface $logger): Response
     {
         $connection = $entityManager->getConnection();
-        $idu=14;
+        $id = $this->getUser()->getId();
 
         $userdb = $connection->executeQuery("
             SELECT email ,username
             FROM user 
-            WHERE id=$idu ");
+            WHERE id=$id ");
         $userExist = $userdb->fetchAssociative()   ;
         return $this->json([
 
@@ -37,6 +40,55 @@ class UserController extends AbstractController
             "info" => $userExist,
 
         ]);
+    }
+    #[Route('/changepssword')]
+    public function changepss(Request $request, EntityManagerInterface $entityManager,
+                             LoggerInterface $logger,
+                              UserPasswordHasherInterface $passwordHasher): Response
+    {
+        $connection = $entityManager->getConnection();
+        $oldpss = $request->get("oldpss", null);
+        $newpass = $request->get("newpass", null);
+
+        $id = $this->getUser()->getId();
+        $user = $this->getUser();
+
+        $password = $connection->fetchOne("
+            SELECT password
+            FROM user 
+            WHERE id=$id ");
+
+        $hashedPassword = $passwordHasher->isPasswordValid($user, $oldpss);
+
+        if($hashedPassword){
+
+
+            $hashnewpass = $passwordHasher->hashPassword(
+                $user,
+                $newpass
+            );
+
+
+            $respuestaa =  $connection->executeQuery(
+                "UPDATE user set password = :password WHERE user.id = :user_id ", [
+                "password" => $hashnewpass,
+                "user_id" => $id
+            ]);
+
+            return $this->json([
+                "info" => "Tu contraseña se actualizo",
+                "con"=> "",
+                "res"=>$hashnewpass
+            ]);
+       }else{
+            return $this->json([
+                "info" => "Contraseña incorrecta",
+
+
+            ]);
+
+        }
+
     }
 
 
@@ -77,44 +129,6 @@ class UserController extends AbstractController
 
     }
 
-    #[Route('/checkregister')]
-    public function checkregister(Request $request, EntityManagerInterface $entityManager,
-                                  LoggerInterface $logger): Response
-    {
-        $email = $request->get("email", null);
-        $username = $request->get("username", null);
-        $password = $request->get("password", null);
 
-        $connection = $entityManager->getConnection();
-
-
-        //Primero, revisamos si existr algunn usuario con el mismo username o el mismo email
-
-        $userdb = $connection->executeQuery("
-            SELECT  password, email 
-            FROM user 
-            WHERE email = '$email' OR username = '$username' ");
-
-        $userExist = $userdb->fetchAssociative()   ;
-
-        if($userExist) {
-            $msg = "Ya existe usuario con el mismo correo o el mismo username";
-            return $this->redirectToRoute('register', [
-                "msg" => $msg
-            ]);
-        }
-
-        $query =  $connection->executeQuery("INSERT INTO user (email, password, username) values('$email','$password','$username')");
-
-
-
-
-        $msg = "Se ha registrado el usuario";
-        return $this->redirectToRoute('login', [
-            "msg" => $msg
-
-        ]);
-
-    }
 
 }

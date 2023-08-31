@@ -13,36 +13,20 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Doctrine\DBAL\DriverManager;
 
+#[Route('/app')]
 class PageController extends AbstractController
 {
-    #[Route('/')]
-    public function index(Request $request)
-    {
-        return $this->render('index.html.twig',[
 
-        ]);
-    }
 
-    #[Route('/login', name:"login")]
+    #[Route('/oldlogin', name:"login")]
     public function login(Request $request): Response
     {
         return $this->render('user/login.html.twig',[
 
         ]);
     }
-    #[Route('/register', name: "register")]
-    public function register(Request $request): Response
-    {
 
-
-
-
-
-
-        return $this->render('user/register.html.twig',[
-            "error" => false
-        ]);
-    }
+    
 
 
     #[Route('/homepage', name: "homepage")]
@@ -54,7 +38,7 @@ class PageController extends AbstractController
 
         ]);
     }
-    #[Route('/userSettings')]
+    #[Route('/userSettings', name:"userSettings")]
     public function userinfo(Request $request): Response
     {
 
@@ -62,7 +46,7 @@ class PageController extends AbstractController
 
         ]);
     }
-    #[Route('/Usercomments')]
+    #[Route('/Usercomments', name:"usercomments")]
     public function usercomments(Request $request): Response
     {
 
@@ -70,7 +54,7 @@ class PageController extends AbstractController
 
         ]);
     }
-    #[Route('/UserLists')]
+    #[Route('/UserLists', name:"userlist")]
     public function userlists(Request $request): Response
     {
 
@@ -80,7 +64,7 @@ class PageController extends AbstractController
     }
 
 
-    #[Route('/movie/{movieId}')]
+    #[Route('/movie/{movieId}',name:"moviesinfo")]
     public function movieInfo(Request $request, $movieId, EntityManagerInterface $entityManager,
                               LoggerInterface $logger): Response
     {

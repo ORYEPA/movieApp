@@ -21,9 +21,9 @@
             function rendermoviels(){
                 const settings = {
 
-                    url: '/chargelistinfo',
+                    url: '/app/chargelistinfo',
                     data:{
-                        list_id:{{ listid }}
+                        list_id: {{ listid }}
                     }
                 };
                 $.ajax(settings).done(function (response) {

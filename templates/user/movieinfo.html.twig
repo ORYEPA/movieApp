@@ -145,10 +145,10 @@
 
                 const settings = {
 
-                    url: '/movie/{{movieId}}/Checkcomments',
+                    url: '/app/movie/{{movieId}}/Checkcomments',
                     data: {
                         movieid:{{ movieId }},
-                        comment: input,user
+                        comment: input
 
                     }
                 };
@@ -195,7 +195,7 @@
             function rendercomments(cb){
                 const settings = {
 
-                    url: '/movie/{{movieId}}/chargeComments',
+                    url: '/app/movie/{{movieId}}/chargeComments',
                     data:{
                         movieid:{{movieId}},
                     }
@@ -203,6 +203,8 @@
 
                 $.ajax(settings).done(function (response) {
                     commentslist=response.comments;
+                    var role= response.rol[1]
+
 
 
                     var movieInf= []
@@ -227,6 +229,10 @@
                         `
                         movieInf.push(element);
                     });
+                    if(role != "admin"){
+                        $('.deletebut').addClass("visibility: hidden")
+                        console.log("aaaaaa")
+                    }
                     $('.commentList').empty().append(movieInf.join(''));
 
                     cb();
@@ -240,7 +246,7 @@
             function deletecomments(comments,cb){
                 const settings = {
 
-                    url: '/movie/{{movieId}}/deleteComments',
+                    url: '/app/movie/{{movieId}}/deleteComments',
                     data:{
 
                         comments:comments

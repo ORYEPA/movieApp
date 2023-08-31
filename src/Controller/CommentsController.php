@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Doctrine\DBAL\DriverManager;
-
+#[Route('/app')]
 class CommentsController extends AbstractController
 {
 
@@ -24,7 +24,7 @@ class CommentsController extends AbstractController
     {
         $connection = $entityManager->getConnection();
         $comments = $request->get("comment", null);
-        $userId = 1;
+        $userId = $this->getUser()->getId();
         $movie_id = $request->get("movieid", null);
         $datem = $request->get("date", null);
 
@@ -43,6 +43,8 @@ class CommentsController extends AbstractController
 
         $movie_id = $request->get("movieid", null);
         $connection = $entityManager->getConnection();
+        $role = $this->getUser()->getRoles();
+
         $comments = $connection->fetchAllAssociative("
             SELECT comments, u.username, u.email ,datem
             FROM comments 
@@ -61,7 +63,8 @@ class CommentsController extends AbstractController
             "Tiene comentarios" => $action,
 
             "comments" => $comments,
-            "pelicula" => $movie_id
+            "pelicula" => $movie_id,
+            "rol" => $role
         ]);
 
     }
@@ -71,7 +74,7 @@ class CommentsController extends AbstractController
                                 LoggerInterface        $logger): Response
     {
 
-        $id = 1;
+        $id = $this->getUser()->getId();
         $connection = $entityManager->getConnection();
         $comments = $connection->fetchAllAssociative("
             SELECT comments, movie_id,datem
@@ -104,14 +107,15 @@ class CommentsController extends AbstractController
 
         $movie_id = $request->get("movieId", null);
         $comments = $request->get("comment", null);
+        $role = $this->getUser()->getRoles();
+        $id = $this->getUser()->getId();
 
-        $userId = 1;
         $connection = $entityManager->getConnection();
         $connection->executeQuery("
                 DELETE 
                 FROM comments
                 WHERE movie_id = $movie_id 
-                  AND user_id = $userId
+                  AND user_id = $id
                 ");
         $action = "si se borro, creo";
 

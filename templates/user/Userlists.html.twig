@@ -51,11 +51,12 @@
 
                     renderlist(function (listn) {
                         listn.map(function (kl) {
-
+                            var url="{{ path("listid", {"listid": "papas"}) }}"
+                            url=url.replace("papas",kl.listid)
                             var element = `
 
                             <div class="lg:flex">
-                                <a href="/list/${kl.listid}">
+                                <a href="${url}">
                                     <img class="object-cover w-full h-56 rounded-lg lg:w-64" src="https://images.unsplash.com/photo-1515378960530-7c0da6231fb1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" alt="">
 
                                     <div class="flex flex-col justify-between py-6 lg:mx-6">
@@ -81,7 +82,7 @@
                 function renderlist(cb){
                     const settings = {
 
-                        url: '/chargelist',
+                        url: '/app/chargelist',
                         data:{}
                     };
                     $.ajax(settings).done(function (response) {
@@ -94,7 +95,7 @@
                 function rendermoviels(){
                     const settings = {
 
-                        url: '/chargelistinfo',
+                        url: '/app/chargelistinfo',
                         data:{}
                     };
                     $.ajax(settings).done(function (response) {
@@ -106,7 +107,7 @@
                 function getUserinfo(){
                     const settings = {
 
-                        url: '/AccessUserInfo',
+                        url: '/app/AccessUserInfo',
                         data: {
                         }
                     };
@@ -122,7 +123,6 @@
                 $( document ).ready(function() {
                     render();
                     getUserinfo()
-                    rendermoviels()
                     //getdata();
 
                 });

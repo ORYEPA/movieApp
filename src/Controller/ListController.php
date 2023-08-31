@@ -11,12 +11,12 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Doctrine\DBAL\DriverManager;
 
-
+#[Route('/app')]
 class ListController extends AbstractController
 {
 
 
-    #[Route('/list/{listid}')]
+    #[Route('/list/{listid}',name:"listid")]
     public function userbookmark(Request $request, $listid, EntityManagerInterface $entityManager,
                                  LoggerInterface $logger): Response
     {
@@ -33,7 +33,7 @@ class ListController extends AbstractController
     {
         $connection = $entityManager->getConnection();
         $nameli = $request->get("nameli", null);
-        $userId = 14;
+        $id = $this->getUser()->getId();
 
         if((strlen(trim($nameli))) == 0 || is_null($nameli)) {
             return $this->json([
@@ -44,7 +44,7 @@ class ListController extends AbstractController
 
         $query = $connection->executeQuery("INSERT INTO 
             listname ( nameli, userid) 
-            values('$nameli','$userId')");
+            values('$nameli','$id')");
 
         return $this->json(["valor" => "ok"]);
     }
@@ -92,7 +92,7 @@ class ListController extends AbstractController
                                      LoggerInterface        $logger): Response
     {
 
-        $id = 14;
+        $id = $this->getUser()->getId();
         $connection = $entityManager->getConnection();
         $list = $connection->fetchAllAssociative("
             SELECT nameli,listid
@@ -120,7 +120,7 @@ class ListController extends AbstractController
     {
         $list_id = $request->get("list_id", null);
 
-
+        $logger->debug("aaa".$list_id);
         $connection = $entityManager->getConnection();
         $movies = $connection->fetchAllAssociative("
             SELECT movie_id
