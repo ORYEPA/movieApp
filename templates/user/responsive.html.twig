@@ -1,0 +1,107 @@
+{%use "user/header.html.twig" %}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+<body>
+{% block header %}
+    {{ parent() }}
+{% endblock %}
+{% block body %}
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        .menu {
+            float: left;
+            width: 20%;
+        }
+        .menuitem {
+            padding: 8px;
+            margin-top: 7px;
+            border-bottom: 1px solid #f1f1f1;
+        }
+        .main {
+            float: left;
+            width: 60%;
+            padding: 0 20px;
+            overflow: hidden;
+        }
+        .right {
+            background-color: lightblue;
+            float: left;
+            width: 20%;
+            padding: 10px 15px;
+            margin-top: 7px;
+        }
+
+        @media only screen and (max-width:800px) {
+            /* For tablets: */
+            .main {
+                width: 80%;
+                padding: 0;
+            }
+            .right {
+                width: 100%;
+            }
+        }
+        @media only screen and (max-width:500px) {
+            /* For mobile phones: */
+            .menu, .main, .right {
+                width: 100%;
+            }
+        }
+    </style>
+    <body style="font-family:Verdana;">
+
+    <div style="background-color:#f1f1f1;padding:15px;">
+        <h1>aasdadad</h1>
+        <h3>asdasddasd</h3>
+    </div>
+
+    <div style="overflow:auto">
+        <div class="menu">
+            <div class="menuitem">dasd</div>
+            <div class="menuitem">asda</div>
+            <div class="menuitem">dasd</div>
+            <div class="menuitem">ads</div>
+        </div>
+
+        <div class="main">
+            <h2>Teeeeeeeeeeeeeeeeeeeeeeeeeee</h2>
+            <p>Taaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
+        </div>
+
+        <div class="right">
+            <h2>What?</h2>
+            <p>asdasdg</p>
+            <h2>gggggg</h2>
+            <p>settt</p>
+            <h2>fsdg?</h2>
+            <p>dasdasd</p>
+        </div>
+    </div>
+
+
+    <div style="background-color:#f1f1f1;text-align:center;padding:10px;
+    margin-top:7px;font-size:12px;">
+        yafusgfhsglu</div>
+
+    </body>
+
+
+
+
+
+
+
+{% endblock %}
+</body>
+</html>

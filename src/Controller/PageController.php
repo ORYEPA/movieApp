@@ -38,6 +38,24 @@ class PageController extends AbstractController
 
         ]);
     }
+    #[Route('/responsive', name: "resp      onsive")]
+    public function responseex(Request $request): Response
+    {
+
+
+        return $this->render('user/responsive.html.twig',[
+
+        ]);
+    }
+    #[Route('/pruebas', name: "dasd")]
+    public function pruebas(Request $request): Response
+    {
+
+
+        return $this->render('user/pruebas.html.twig',[
+
+        ]);
+    }
     #[Route('/userSettings', name:"userSettings")]
     public function userinfo(Request $request): Response
     {
