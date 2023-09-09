@@ -18,10 +18,12 @@
             <div class="p-16 bg-gray-100">
                 <div class="p-8 bg-white shadow mt-24">
                     <div class="grid grid-cols-1 md:grid-cols-3">
-                        <div class="grid grid-cols-3 text-center order-last md:order-first mt-20 md:mt-0">
+                        <div class="space-x-8 flex justify-between mt-32 md:mt-0 md:justify-center">
                             <div>
-                                <p class="font-bold text-gray-700 text-xl"></p>
-                                <p class="text-gray-400"></p>
+                                <input type="file" class="changeAvatar text-white py-2 px-4 uppercase rounded bg-gray-700 hover:bg-gray-800
+                                    shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5"
+                                value="Change Avatar" >
+
                             </div>
                             <div>
                                 <p class="font-bold text-gray-700 text-xl"></p>
@@ -35,10 +37,11 @@
                         <div class="relative">
                             <div class="w-48 h-48 bg-indigo-100 mx-auto rounded-full shadow-2xl absolute
                             inset-x-0 top-0 -mt-24 flex items-center justify-center text-indigo-500">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" viewBox="0 0 20 20"
+                                <svg id="svgphoto" xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" viewBox="0 0 20 20"
                                      fill="currentColor">
                                     <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114
                                     0H3z" clip-rule="evenodd" /></svg>
+                                <img id="avatarphoto"  alt="avatarPhoto" class="rounded-full">
                             </div>
                         </div>
                         <div class="space-x-8 flex justify-between mt-32 md:mt-0 md:justify-center">
@@ -202,6 +205,39 @@
                     alert(response.info);
                 });
             }
+            function changeAvatar(avatar){
+                let formdata= new FormData();
+                formdata.append("avatar2",avatar)
+
+                const settings = {
+
+                    url: '/app/changeAvatar',
+                    data: formdata,
+                    cache:false,
+                    contentType:false,
+                    processData:false,
+                    method:'POST'
+                };
+
+                $.ajax(settings).done(function (response) {
+                    console.log(response)
+                    chargeAvatar();
+                });
+            }
+            function chargeAvatar(){
+
+                const settings = {
+
+                    url: '/app/chargeAvatar',
+
+                };
+
+                $.ajax(settings).done(function (response) {
+                    console.log(response)
+                    $('#avatarphoto').attr("src","{{ asset("photos") }}/" + response.phto)
+                    $('#svgphoto').addClass( "!visible hidden" )
+                });
+            }
             function render(){
 
             }
@@ -228,6 +264,7 @@
             }
             $( document ).ready(function() {
                 getUserinfo()
+                chargeAvatar()
 
 
 
@@ -262,10 +299,18 @@
 
                     }
 
+                })
+                $('.changeAvatar').on("change",function(e){
+                    console.log(e.target.files[0])
 
-                    //alert("Se cambio tu contraseña");
-
-
+                    var avatar= e.target.files[0]
+                    if (avatar.type != "image/jpeg"){
+                        alert("no se puede jsjs")
+                        $(".changeAvatar").val("");
+                    }
+                    else{
+                        changeAvatar(avatar)
+                    }
 
                 })
 

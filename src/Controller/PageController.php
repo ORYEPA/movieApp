@@ -86,6 +86,8 @@ class PageController extends AbstractController
     public function movieInfo(Request $request, $movieId, EntityManagerInterface $entityManager,
                               LoggerInterface $logger): Response
     {
+
+
         return $this->render('user/movieinfo.html.twig',[
             "movieId" => $movieId
 

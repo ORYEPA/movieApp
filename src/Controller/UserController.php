@@ -41,6 +41,46 @@ class UserController extends AbstractController
 
         ]);
     }
+    #[Route('/changeAvatar')]
+    public function changeAvatar(Request $request, EntityManagerInterface $entityManager,
+                             LoggerInterface $logger): Response
+    {
+        $connection = $entityManager->getConnection();
+        $id = $this->getUser()->getId();
+        $avatar= $request->files->get("avatar2");
+        $uniqid = uniqid();
+        $dir = "photos/";
+        $filename = $uniqid . ".jpg";
+        $avatar->move($dir, $filename);
+        $respuestaa =  $connection->executeQuery(
+            "UPDATE user set avatar = :password WHERE user.id = :user_id ", [
+            "password" => $filename,
+            "user_id" => $id
+        ]);
+        return $this->json([
+
+
+            "info" => $avatar,
+
+        ]);
+    }
+    #[Route('/chargeAvatar')]
+    public function chargeAvatar(Request $request, EntityManagerInterface $entityManager,
+                                 LoggerInterface $logger): Response
+    {
+        $connection = $entityManager->getConnection();
+        $id = $this->getUser()->getId();
+
+        $respuesta = $connection->fetchOne("
+            SELECT avatar
+            FROM user 
+            WHERE id=$id ");
+        return $this->json([
+
+            "phto" => $respuesta,
+
+        ]);
+    }
     #[Route('/changepssword')]
     public function changepss(Request $request, EntityManagerInterface $entityManager,
                              LoggerInterface $logger,

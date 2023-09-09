@@ -46,25 +46,27 @@ class CommentsController extends AbstractController
         $role = $this->getUser()->getRoles();
 
         $comments = $connection->fetchAllAssociative("
-            SELECT comments, u.username, u.email ,datem
+            SELECT comments, u.username, u.email ,datem , comments.id
             FROM comments 
                 JOIN dbprueba.user u on comments.user_id = u.id
             WHERE movie_id = $movie_id"
         );
-        if (!$comments) {
-            $action = "No Tiene comentarios";
+        $role = $this->getUser()->getRoles();
 
+        if(in_array("admin",$role)){
+            //si es admin
 
-        } else {
-            $action = "tiene comentarios";
-
+            $action = "a";
+        }
+        else{
+            //no puedes borrar no eres admin
+            $action = "z";
         }
         return $this->json([
-            "Tiene comentarios" => $action,
+            "Rol" => $action,
 
             "comments" => $comments,
             "pelicula" => $movie_id,
-            "rol" => $role
         ]);
 
     }
@@ -82,16 +84,11 @@ class CommentsController extends AbstractController
                 
             WHERE user_id = $id"
         );
-        if (!$comments) {
-            $action = "No Tiene comentarios";
 
 
-        } else {
-            $action = "tiene comentarios";
 
-        }
         return $this->json([
-            "Tiene comentarios" => $action,
+            "Rol" => $action,
 
             "comments" => $comments,
 
@@ -106,18 +103,30 @@ class CommentsController extends AbstractController
     {
 
         $movie_id = $request->get("movieId", null);
-        $comments = $request->get("comment", null);
+        $comments = $request->get("comments", null);
+
         $role = $this->getUser()->getRoles();
         $id = $this->getUser()->getId();
 
-        $connection = $entityManager->getConnection();
-        $connection->executeQuery("
+        if(in_array("admin",$role)){
+            //si es admin
+            $connection = $entityManager->getConnection();
+            $connection->executeQuery("
                 DELETE 
                 FROM comments
                 WHERE movie_id = $movie_id 
-                  AND user_id = $id
+                  AND user_id = $id 
+                And id= $comments
+                
+                    
                 ");
-        $action = "si se borro, creo";
+            $action = "si se borro, creo";
+        }
+        else{
+            //no puedes borrar no eres admin
+            $action = "no se pudo no eres admin";
+        }
+
 
         return $this->json([
             "se borro?" => $action,
