@@ -1,5 +1,5 @@
 {%use "user/header.html.twig" %}
-{%use "user/tablemovieformat.html.twig" %}
+{% use 'components/modal.html.twig' %}
 <!DOCTYPE html>
 <html lang="es">
     <head>
@@ -8,68 +8,57 @@
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
         <script src="https://cdn.tailwindcss.com"></script>
 
-        {% block stylesheets %}
-            <style>
-                .table {
-                    border-spacing: 0 15px;
-                }
 
-                i {
-                    font-size: 1rem !important;
-                }
-
-                .table tr {
-                    border-radius: 20px;
-                }
-
-                tr td:nth-child(n+5),
-                tr th:nth-child(n+5) {
-                    border-radius: 0 .625rem .625rem 0;
-                }
-
-                tr td:nth-child(1),
-                tr th:nth-child(1) {
-                    border-radius: .625rem 0 0 .625rem;
-                }
-            </style>
-
-        {% endblock %}
 
     </head>
     <body>
     {% block header %}
         {{ parent() }}
     {% endblock %}
-    {% block tablemovieformat %}
-        {{ parent() }}
+    {% block modal %}{{ parent() }}{% endblock %}
+    {% block body %}
+    <div class="flex flex-col">
+        <button  class="modalRegs text-white py-2 px-4 uppercase rounded bg-gray-700 hover:bg-gray-800
+                            shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5">
+            Meter nuevo Enfermo</button>
+        <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                <div class="overflow-hidden">
+                    <table class="min-w-full border text-center text-sm font-light dark:border-neutral-500">
+                        <tr>
+                            <th scope="col"
+                                class="border-r px-6 py-4 dark:border-neutral-500">
+                                ID</th>
+                            <th scope="col"
+                                class="border-r px-6 py-4 dark:border-neutral-500">
+                                Nombre del Paciente</th>
+                            <th scope="col"
+                                class="border-r px-6 py-4 dark:border-neutral-500">
+                                Foto del Paciente</th>
+                            <th scope="col"
+                                class="border-r px-6 py-4 dark:border-neutral-500">
+                                Descripción</th>
+                            <th scope="col"
+                                class="border-r px-6 py-4 dark:border-neutral-500">
+                                Doctor</th>
+                            <th scope="col"
+                                class="border-r px-6 py-4 dark:border-neutral-500">
+                                Estudios</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
     {% endblock %}
     <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
     <script>
-        var movies=[];
 
-        function getdatatable(){
-            const settings = {
-                async: true,
-                crossDomain: true,
-                url: 'https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1',
-                method: 'GET',
-                headers: {
-                    accept: 'application/json',
-                    Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkMTlmN2Q3MmYzOGQ2ZjIzNDEzZTVjODRjZmNmYTMwNSIsInN1YiI6IjY0ZGJhZGM5Yjc3ZDRiMTE0MjVkZmEwNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.OE2bMBkUtaosNS2qL0Sik6tci6W5dGw3AtQFcpH-Elg'
-                }
-            };
-
-            $.ajax(settings).done(function (response) {
-
-                movies=response.results;
-                render(movies)
-
-
-
-            });
-        }
         $( document ).ready(function() {
-            getdatatable();
+            $(".modalRegs").on("click", function() {
+                console.log("se empezo con el registro del nuevo paciente")
+                openGlobalModal()
+            });
 
 
 

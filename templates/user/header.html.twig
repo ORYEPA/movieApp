@@ -2,13 +2,9 @@
     <nav class="bg-gray-100 border-gray-200 dark:bg-gray-900">
         <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
             <a href="{{ path('homepage') }}" class="flex items-center">
-                <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">MovieApp</span>
+                <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Archvios</span>
             </a>
             <div class="flex md:order-2">
-                <select   class="filtrgens bg-gray-300">
-                    <option selected>Choose a genere</option>
-
-                </select>
 
 
                 <div class="relative hidden md:block">
@@ -114,7 +110,6 @@
                     generesXPelicula.push(element);
                 });
 
-                $('.filtrgens').append(generesXPelicula.join(''))
 
 
             })
@@ -128,12 +123,7 @@
                 search();
 
             });
-            $('.filtrgens').change(function (event){
-                let gId = event.target.value;
-                console.log({gId})
 
-                filtergen(gId);
-            })
         });
 
 

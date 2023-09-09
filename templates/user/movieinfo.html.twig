@@ -203,12 +203,25 @@
 
                 $.ajax(settings).done(function (response) {
                     commentslist=response.comments;
-                    var role= response.rol[1]
+                    var rol =response.Rol;
+                    var botondel =` `;
+
 
 
 
                     var movieInf= []
                     commentslist.map(function (com){
+                        if (rol == "a"){
+                            botondel= `<button type="button"
+                                               data-idcom="${com.id}"
+
+                                               class="deletebut  item-end text-white
+                        bg-red-700 hover:bg-red-800 focus:outline-none
+                        focus:ring-4 focus:ring-red-300 font-medium
+                        rounded-full text-sm px-5 py-2.5 text-center
+                        mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700
+                        dark:focus:ring-red-900">Delete</button>`;
+                        }
                         element = `
                         <div class="border-double border-4
                         border-black-500 bg-gray-400 text-gray-900
@@ -216,12 +229,8 @@
                         <h5 class="text-end text-xss">${com.datem}</h5>
                         <h3>${com.username} : <br></h3>
                         <p>${com.comments}</p>
-                        <button type="button" class="deletebut item-end text-white
-                        bg-red-700 hover:bg-red-800 focus:outline-none
-                        focus:ring-4 focus:ring-red-300 font-medium
-                        rounded-full text-sm px-5 py-2.5 text-center
-                        mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700
-                        dark:focus:ring-red-900">Delete</button>
+                        ${botondel}
+
 
                         </div>
 
@@ -229,10 +238,7 @@
                         `
                         movieInf.push(element);
                     });
-                    if(role != "admin"){
-                        $('.deletebut').addClass("visibility: hidden")
-                        console.log("aaaaaa")
-                    }
+
                     $('.commentList').empty().append(movieInf.join(''));
 
                     cb();
@@ -243,25 +249,22 @@
 
             }
 
-            function deletecomments(comments,cb){
+            function deletecomments(commentId,cb){
                 const settings = {
 
                     url: '/app/movie/{{movieId}}/deleteComments',
                     data:{
-
-                        comments:comments
+                        comments:commentId
                     }
                 };
                 $.ajax(settings).done(function (response) {
 
-                    //cb();
-
+                    cb();
+                    console.log(response)
 
 
                 })
-
-
-            };
+            }
 
             function obtmap(movies){
 
@@ -289,10 +292,6 @@
                         .openOn(map);
 
                 });
-
-
-
-
             }
 
             $( document ).ready(function() {
@@ -308,7 +307,9 @@
                     });
                 });
                 $('.commentList').on("click",".deletebut",function(){
-                    deletecomments(() => {
+                    var idcom=$(this).attr("data-idcom")
+
+                    deletecomments(idcom, () => {
                         rendercomments(() => {
                             $(".comments").val("");
                         });
