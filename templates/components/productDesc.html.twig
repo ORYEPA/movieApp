@@ -1,0 +1,124 @@
+{% block modalproduct %}
+    <style>
+        #modalGlobal {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .modal-container {
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            background-color: white;
+            padding: 10px;
+            border: 1px solid red;
+            width: 80%;
+            height: 80%;
+            border-radius: 10px;
+        }
+
+        #closeGlobalModal {
+            cursor: pointer;
+            font-size: 2rem;
+        }
+
+    </style>
+
+    <div id="modalGlobal">
+        <div class="modal-container">
+
+            <div class="modal-body">
+                <span id="titleGlobalModal"></span>
+                <span id="closeGlobalModal">&times;</span>
+                <div class="flex align-center">
+                    <div class="w-12/12 md:w-4/12">
+                        <div class="w-full md:w-5/6 p-4 rounded">
+                            <img id="cardPoster" src="" alt="" class="w-full h-full rounded">
+                        </div>
+                    </div>
+                    <div class="w-12/12 md:w-8/12 flex" style="flex-direction: column;">
+                        <h2 id="cardTitle" class="font-bold"
+                            style="font-size: 53px; margin: 0 0 30px 0;"></h2>
+                        <h2 id="price"
+                            style="font-size: 40px; margin: 0 0 30px 0;"></h2>
+
+                        <p id="cardReview" class="text-xl mb-4"></p>
+                        <div class="w-full mb-4">
+                            <span id="cardGenres" class="text-lg text-gray-400"></span>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+
+
+    <script>
+
+        function closeGlobalModal() {
+            $("#modalGlobal").hide();
+        }
+
+        function openGlobalModal(idProduct) {
+            $("#modalGlobal").show();
+            const settings = {
+
+                url:'/app/getProduct',
+                data:{
+                    idProduct:idProduct
+                }
+            }
+            $.ajax(settings).done(function (response) {
+
+                product=response.productos
+                product.map(function (prod){
+                    $("#cardPoster").attr("src", prod.image);
+                    $("#cardTitle").text(prod.title)
+                    $("#cardReview").text(prod.description)
+                    $("#cardGenres").text(prod.category)
+                    $("#price").text("$"+ prod.price)
+
+                })
+
+
+
+            })
+        }
+
+        function renderBodyGlobalModal(title = '', body = '') {
+            $("#titleGlobalModal").text(title);
+            $("#bodyGlobalModal").empty().append(body);
+        }
+
+
+        $( document ).ready(function() {
+            $("#closeGlobalModal").click(function() {
+                closeGlobalModal();
+            })
+        });
+
+    </script>
+{% endblock %}
