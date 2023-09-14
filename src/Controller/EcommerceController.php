@@ -116,6 +116,12 @@ class EcommerceController extends AbstractController
             SELECT *
             FROM carrito 
             join product on product.id=carrito.id_product
+             where user_id = $userId and order_id is null "
+        );
+        $total = $connection->fetchOne("
+            SELECT  format( sum(quantity)* (price), 2)
+            FROM carrito 
+            join product on product.id=carrito.id_product
              where user_id = $userId"
         );
 
@@ -123,10 +129,59 @@ class EcommerceController extends AbstractController
 
         return $this->json([
 
-            "productos" => $product
+            "productos" => $product,
+            "total"=> $total
         ]);
 
     }
+    #[Route('/updateQuantity')]
+    public function updateQuantity(Request $request,
+                               EntityManagerInterface $entityManager,
+                               LoggerInterface        $logger): Response
+    {
+        $userId = $this->getUser()->getId();
+        $idProduct= $request->get("idProduct",);
+        $action= $request->get("action",);
+        $connection = $entityManager->getConnection();
+
+
+        if ($action == "suma"){
+            $prod = $connection->executeQuery("
+            update carrito set quantity = quantity +1 where id_product=$idProduct"
+            );
+
+
+        }
+        elseif ($action == "resta"){
+            $prod = $connection->executeQuery("
+            select  quantity -1 from carrito where id_product=$idProduct"
+            );
+            $com= $prod->fetchOne();
+            if ($com <= 0 ){
+                $prod = $connection->executeQuery("
+            delete from carrito  where id_product=$idProduct"
+                );
+            }
+            else {
+                $prod = $connection->executeQuery("
+            update carrito set quantity = quantity -1 where id_product=$idProduct"
+                );
+
+            }
+
+
+        }
+
+
+
+
+        return $this->json([
+
+            "productos" => "se actualizo "
+        ]);
+
+    }
+
 
 
 

@@ -65,6 +65,15 @@ class PageController extends AbstractController
 
         ]);
     }
+    #[Route('/order', name: "order")]
+    public function order(Request $request): Response
+    {
+
+
+        return $this->render('ecommerce/orderPage.html.twig',[
+
+        ]);
+    }
     #[Route('/userSettings', name:"userSettings")]
     public function userinfo(Request $request): Response
     {
