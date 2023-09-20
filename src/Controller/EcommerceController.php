@@ -31,12 +31,8 @@ class EcommerceController extends AbstractController
             FROM product "
         );
 
-
-
         return $this->json([
-
             "productos" => $products
-
         ]);
 
     }

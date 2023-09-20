@@ -6,20 +6,20 @@ import ProductCard from "./components/ProductCard";
 const Order = () => {
     const [productos, setProductos] = useState([]);
 
-    
     //Hace peticion ajax para traer los productos
     const getProducts = () => {
-          return [{
-            id: 1,
-            tittle: "televison",
-            price: 5
-        },
-            {
+          return [
+              {
+                id: 1,
+                tittle: "televison",
+                price: 5
+              },
+              {
                 id: 2,
                 tittle: "Ipad",
                 price: 50
-            },
-        ];
+              },
+         ];
     }
 
     useEffect(() => {
