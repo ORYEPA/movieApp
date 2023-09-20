@@ -28,7 +28,7 @@ const Order = () => {
         <Header title={"Carrito"} />
         {
             productos.map((product) => {
-                return <ProductCard producto={product} />
+                return <ProductCard key={product.id} producto={product} />
             })
         }
     </div>
