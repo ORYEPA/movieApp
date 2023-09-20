@@ -31,6 +31,14 @@
             <div class="w-8/12 ">
                 <p id="cardTitle" class="font-bold text-white"
                    style="font-size: 28px; margin: 0 0 30px 0;">Total : </p>
+                <a href="/order">
+                    <button
+
+                            class="quantity block text-white bg-blue-700
+                    hover:bg-blue-800  type="button">
+                    Pay</button>
+                </a>
+
             </div>
         </div>
 
@@ -110,6 +118,7 @@
 
 
             });
+            $("#cardTitle").text(response.total)
             $("#cardTitle").text(response.total)
 
             $('.cart').empty().append(movieInf.join(''));
