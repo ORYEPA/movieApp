@@ -109,11 +109,19 @@ class EcommerceController extends AbstractController
 
         $connection = $entityManager->getConnection();
         $product = $connection->fetchAllAssociative("
-            SELECT *
+            SELECT carrito.order_id,
+                   carrito.quantity,
+                   product.title, 
+                   product.price, 
+                   product.description, 
+                   product.category, 
+                   product.image, 
+                   product.rate
             FROM carrito 
-            join product on product.id=carrito.id_product
+            join product on product.id = carrito.id_product
              where user_id = $userId and order_id is null "
         );
+
         $total = $connection->fetchOne("
             SELECT  format( sum(quantity)* (price), 2)
             FROM carrito 
@@ -124,7 +132,6 @@ class EcommerceController extends AbstractController
 
 
         return $this->json([
-
             "productos" => $product,
             "total"=> $total
         ]);

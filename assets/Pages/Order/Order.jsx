@@ -8,24 +8,24 @@ const Order = () => {
 
     //Hace peticion ajax para traer los productos
     const getProducts = () => {
-          return [
-              {
-                id: 1,
-                tittle: "televison",
-                price: 5
+          $.ajax({
+              url: "/app/getCarrito",
+              data: {},
+              beforeSend: () => {},
+              complete: () => {},
+              success: (response) => {
+                  let {productos, total} = response;
+                  console.log({response});
+                  setProductos(productos);
               },
-              {
-                id: 2,
-                tittle: "Ipad",
-                price: 50
-              },
-         ];
+              error: (xhr) => {
+              }
+          });
+
     }
 
     useEffect(() => {
-        let response = getProducts();
-        setProductos(response);
-
+        getProducts();
     }, [])
 
     return <div>
