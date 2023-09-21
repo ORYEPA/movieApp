@@ -1,0 +1,34 @@
+{# templates/base.html.twig #}
+<html>
+<head>
+    <!-- ... -->
+
+    {% block stylesheets %}
+    <script src="https://cdn.tailwindcss.com"></script>
+    {# 'app' must match the first argument to addEntry() in webpack.config.js #}
+    {{ encore_entry_link_tags('app') }}
+
+    <!-- Renders a link tag (if your module requires any CSS)
+         <link rel="stylesheet" href="/build/app.css"> -->
+    {% endblock %}
+
+
+    <input type="hidden" value="{{ order }}" id="orderValue">
+    <div id="root">
+        <!-- Aqui va a renderizarse el codigo de REACT -->
+    </div>
+
+
+    {% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+    {{ encore_entry_script_tags('chargeOrder') }}
+
+    <!-- Renders app.js & a webpack runtime.js file
+        <script src="/build/runtime.js" defer></script>
+        <script src="/build/app.js" defer></script>
+        See note below about the "defer" attribute -->
+    {% endblock %}
+</head>
+
+<!-- ... -->
+</html>

@@ -22,6 +22,7 @@ Encore
      */
     .addEntry('app', './assets/app.js')
     .addEntry('order', './assets/Pages/Order/Order.jsx')
+    .addEntry('chargeOrder', './assets/Pages/chargeOrder/ChargeOrder.jsx')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()

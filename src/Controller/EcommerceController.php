@@ -66,7 +66,8 @@ class EcommerceController extends AbstractController
         $idProduct= $request->get("idProduct",);
         $connection = $entityManager->getConnection();
         $exist= $connection->executeQuery("
-        Select  * from carrito where id_product= '$idProduct'");
+        Select  * from carrito where id_product= '$idProduct' and
+                                     order_id is null");
 
 
         $si= $exist->fetchAssociative();
@@ -112,6 +113,7 @@ class EcommerceController extends AbstractController
             SELECT carrito.order_id,
                    carrito.quantity,
                    product.title, 
+                   product.id,
                    product.price, 
                    product.description, 
                    product.category, 
@@ -126,7 +128,7 @@ class EcommerceController extends AbstractController
             SELECT  format( sum(quantity)* (price), 2)
             FROM carrito 
             join product on product.id=carrito.id_product
-             where user_id = $userId"
+             where user_id = $userId and order_id is null"
         );
 
 

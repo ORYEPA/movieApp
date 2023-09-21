@@ -65,7 +65,7 @@ class PageController extends AbstractController
 
         ]);
     }
-    #[Route('/order', name: "order")]
+    #[Route('/buyOrder', name: "order")]
     public function order(Request $request): Response
     {
 

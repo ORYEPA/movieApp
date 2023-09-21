@@ -1,0 +1,2 @@
+#!/bin/bash
+/usr/bin/mariadb --user=admin --password=password --database=dbprueba --execute="UPDATE dbprueba.order SET status_id = CASE WHEN status_id = 10 THEN  20 WHEN status_id = 20 THEN   30 WHEN status_id = 30 THEN   40 WHEN status_id = 40 THEN   50 WHEN status_id = 60 THEN   70 ELSE status_id END;"

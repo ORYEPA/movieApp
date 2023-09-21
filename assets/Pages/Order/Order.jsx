@@ -7,6 +7,7 @@ import PayBotton from "./components/PayBotton";
 const Order = () => {
     const [productos, setProductos] = useState([]);
 
+    const [total,setTotal] = useState([]);
 
     //Hace peticion ajax para traer los productos
     const getProducts = ()=> {
@@ -16,8 +17,17 @@ const Order = () => {
             }
         }).done(function (response) {
             let productos = response.productos || [];
+            let total = response.total;
             setProductos(productos);
+            setTotal(total)
+
+            console.log(total)
         });
+    }
+    const instertOrder= (event) => {
+        console.log("jsjsjs aun no hace nada ")
+        event.preventDefault()
+        window.open("/createOrder")
     }
 
     useEffect(() => {
@@ -30,7 +40,19 @@ const Order = () => {
             productos.map((product) => {
                 return <ProductCard key={product.id} producto={product} />
             })
+
         }
+        <div style={{width:"100%", textAlign: "right"}}>
+            <div style={{width:"100%", textAlign: "right"}}>Total : ${total}</div>
+            <a href="">
+                <button style={{background:"blue",
+                    color: "white", width:"10%",
+                    textAlign: "center"}}
+                    onClick={instertOrder}>Buy</button>
+            </a>
+
+        </div>
+
     </div>
 }
 

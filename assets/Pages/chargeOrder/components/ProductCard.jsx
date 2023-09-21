@@ -1,8 +1,8 @@
 import React from "react";
 
-const ProductCard = ({producto}, {total}) => {
+const ProductCard = ({producto}) => {
 
-    return <div className="border rounded flex w-full">
+    return <div className="border rounded flex ">
         <div className="w-3/12 border-r" style={{maxWidth: "230px"}}>
             <img className="w-full" src={producto.image} alt={producto.title}/>
         </div>
